@@ -933,6 +933,10 @@ Documentation:
 
 ## 
 
+Solid simulation tools, with *visualization*, *output*, and *documentation*.
+
+. . .
+
 `msprime`: https://github.com/tskit-dev/msprime
 
 `SLiM`: https://messerlab.org/slim/
