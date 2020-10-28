@@ -193,6 +193,24 @@ from [pyslim.readthedocs.io/en/latest/tutorial.html](https://pyslim.readthedocs.
 :::
 :::::::
 
+## SLiM + msprime
+
+::: {.columns}
+::::::: {.column width=30%}
+
+*use msprime to add mutations to the genealogies of a SLiM simulation*
+
+:::
+::::::: {.column width=70%}
+
+![from https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12968](figs/slim_speedup.png){width=90%}
+
+:::
+:::::::
+::: {.caption}
+from [Tree‐sequence recording in SLiM opens new horizons for forward‐time simulation of whole genomes](https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12968)
+:::
+
 # Tree sequences
 
 ## History is a sequence of trees
@@ -913,10 +931,25 @@ Documentation:
 
 # Thanks!
 
+## 
+
+`msprime`: https://github.com/tskit-dev/msprime
+
+`SLiM`: https://messerlab.org/slim/
+
+`tskit`: https://github.com/tskit-dev/tskit
+
+`stdpopsim`: https://github.com/popsim-consortium/stdpopsim
+
+. . .
+
+![](finger_right.png){width=20% .finger}
+**want to contribute?**
+
 ## Thanks especially to
 
 ::: {.columns}
-::::::: {.column width=50%}
+::::::: {.column width=30%}
 
 
 Jerome Kelleher \
@@ -932,15 +965,22 @@ Jared Galloway \
 Boyana Norris \
 Philipp Messer \
 Ben Jeffery \
+Kirk Lohmueller
 
 :::
-::::::: {.column width=50%}
+::::::: {.column width=70%}
 
 
-![NSF](figs/nsf.jpeg){width=30%}
-![NIH](figs/nih.jpeg){width=30%}
-![BDI](figs/bdi.jpeg){width=50%}
-![UO](figs/uo.png){width=50%}
+::: {.centered}
+![tskit](figs/tskit_logo.png){width=25%}
+![popsim](figs/popsim.png){width=20%}
+![SLiM](figs/slim-logo-only.png){width=20%}
+
+![NSF](figs/nsf.jpeg){width=25%}
+![NIH](figs/nih.jpeg){width=25%}
+![BDI](figs/bdi.jpeg){width=40%}
+![UO](figs/uo.png){width=40%}
+:::
 
 :::
 :::::::

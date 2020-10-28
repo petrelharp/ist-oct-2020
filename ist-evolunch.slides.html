@@ -308,6 +308,21 @@ from millions of individuals.</p>
 </div>
 </div>
 </div>
+</section>
+<section id="slim-msprime" class="slide level2">
+<h2>SLiM + msprime</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><em>use msprime to add mutations to the genealogies of a SLiM simulation</em></p>
+</div><div class="column" style="width:70%;">
+<figure>
+<img data-src="figs/slim_speedup.png" style="width:90.0%" alt="from https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12968" /><figcaption aria-hidden="true">from https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12968</figcaption>
+</figure>
+</div>
+</div>
+<div class="caption">
+<p>from <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.12968">Tree‐sequence recording in SLiM opens new horizons for forward‐time simulation of whole genomes</a></p>
+</div>
 </section></section>
 <section>
 <section id="tree-sequences" class="title-slide slide level1">
@@ -980,10 +995,20 @@ tests/test_fileobj.py::TestSocket::test_single_then_multi PASSED</code></pre>
 <h1>Thanks!</h1>
 
 </section>
+<section id="section-12" class="slide level2">
+<h2></h2>
+<p><code>msprime</code>: https://github.com/tskit-dev/msprime</p>
+<p><code>SLiM</code>: https://messerlab.org/slim/</p>
+<p><code>tskit</code>: https://github.com/tskit-dev/tskit</p>
+<p><code>stdpopsim</code>: https://github.com/popsim-consortium/stdpopsim</p>
+<div class="fragment">
+<p><img data-src="finger_right.png" class="finger" style="width:20.0%" /> <strong>want to contribute?</strong></p>
+</div>
+</section>
 <section id="thanks-especially-to" class="slide level2">
 <h2>Thanks especially to</h2>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:30%;">
 <p>Jerome Kelleher<br />
 Ben Haller<br />
 Andy Kern<br />
@@ -997,17 +1022,20 @@ Jared Galloway<br />
 Boyana Norris<br />
 Philipp Messer<br />
 Ben Jeffery<br />
-</p>
-</div><div class="column" style="width:50%;">
-<p><img data-src="figs/nsf.jpeg" style="width:30.0%" alt="NSF" /> <img data-src="figs/nih.jpeg" style="width:30.0%" alt="NIH" /> <img data-src="figs/bdi.jpeg" style="width:50.0%" alt="BDI" /> <img data-src="figs/uo.png" style="width:50.0%" alt="UO" /></p>
+Kirk Lohmueller</p>
+</div><div class="column" style="width:70%;">
+<div class="centered">
+<p><img data-src="figs/tskit_logo.png" style="width:25.0%" alt="tskit" /> <img data-src="figs/popsim.png" style="width:20.0%" alt="popsim" /> <img data-src="figs/slim-logo-only.png" style="width:20.0%" alt="SLiM" /></p>
+<p><img data-src="figs/nsf.jpeg" style="width:25.0%" alt="NSF" /> <img data-src="figs/nih.jpeg" style="width:25.0%" alt="NIH" /> <img data-src="figs/bdi.jpeg" style="width:40.0%" alt="BDI" /> <img data-src="figs/uo.png" style="width:40.0%" alt="UO" /></p>
+</div>
 </div>
 </div>
 <!-- questions?? -->
 </section>
-<section id="section-12" class="slide level2" data-background-image="figs/guillemots_thanks.png" data-background-position="center" data-background-size="50%">
+<section id="section-13" class="slide level2" data-background-image="figs/guillemots_thanks.png" data-background-position="center" data-background-size="50%">
 <h2 data-background-image="figs/guillemots_thanks.png" data-background-position="center" data-background-size="50%"></h2>
 </section>
-<section id="section-13" class="slide level2">
+<section id="section-14" class="slide level2">
 <h2></h2>
 <div class="smaller">
 <div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>pop0 <span class="op">=</span> msprime.PopulationConfiguration(sample_size<span class="op">=</span><span class="dv">3</span>, initial_size <span class="op">=</span> <span class="dv">500</span>)</span>
