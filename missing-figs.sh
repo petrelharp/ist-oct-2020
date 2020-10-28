@@ -32,7 +32,7 @@ do
 done
 
 
-for SOURCEDIR in "/home/peter/projects/tskit-dev/ftprime_ms/talks" "/home/peter/teaching/talks/idaho-march-2019" "/home/peter/teaching/talks/madison-sept-2018" "/home/peter/teaching/talks/france-may-2019" "/home/peter/teaching/talks/uo-oct-2019" "/home/peter/teaching/talks/nw_prob_2019"
+for SOURCEDIR in "/home/peter/projects/tskit-dev/ftprime_ms/talks" "/home/peter/teaching/talks/idaho-march-2019" "/home/peter/teaching/talks/madison-sept-2018" "/home/peter/teaching/talks/france-may-2019" "/home/peter/teaching/talks/uo-oct-2019" "/home/peter/teaching/talks/nw_prob_2019" "/home/peter/teaching/talks/reed-aug-2020"
 do
     for x in $(echo $MISSING)
     do 

@@ -31,6 +31,9 @@ div.floatright { float: right; text-align: right; }
 
 img.finger { vertical-align: text-top; }
 
+.smaller { font-size: 50% }
+.smallish { font-size: 80% }
+
 </style>
 
 

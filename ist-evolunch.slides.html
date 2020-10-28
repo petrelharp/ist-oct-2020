@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Peter Ralph, University of Oregon">
+  <title>Simulation in population genetics</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/simple.css" id="theme">
+  <style type="text/css">
+
+  .reveal { font-size: 30px; }
+
+  .reveal h1 { font-size: 1.5em; } 
+
+  .reveal h2 { font-size: 1.2em; } 
+
+  .reveal .slides { text-align: left; }
+
+  .reveal .slides figure { text-align: center; }
+
+  .centered p { text-align: center; }
+
+  /* apply this to the columns div */
+  div.vcentered { display: flex; align-items: center; }
+
+  .caption p { font-size: 75%; }
+
+  .greyed { color: #4444; }
+
+  div.floatright { float: right; text-align: right; }
+
+  .reveal figcaption { display: none; }
+
+  .reveal img { border: none; }
+
+  .reveal section img { border: none; }
+
+  .MathJax_Display { margin: 0; }
+
+  img.finger { vertical-align: text-top; }
+
+  .smaller { font-size: 50% }
+  .smallish { font-size: 80% }
+
+  </style>
+
+  <div style="display: none">
+  \[
+  \newcommand{\E}{\mathbb{E}}
+  \renewcommand{\P}{\mathbb{P}}
+  \DeclareMathOperator{\var}{var}
+  \]
+  </div>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Simulation in population genetics</h1>
+  <p class="author">Peter Ralph, University of Oregon</p>
+  <p class="date">EvoLunch // October 2020</p>
+</section>
+
+<section>
+<section id="goals" class="title-slide slide level1">
+<h1>Goals</h1>
+
+</section>
+<section id="simulation-can-help-to" class="slide level2">
+<h2>Simulation can help to:</h2>
+<ul>
+<li class="fragment">make things concrete</li>
+<li class="fragment">look for unexpected things</li>
+<li class="fragment">guide and test ideas</li>
+<li class="fragment">assess sensitivity to assumptions</li>
+</ul>
+<div class="fragment">
+<p>and to</p>
+<ul>
+<li class="fragment">validate and benchmark methods</li>
+<li class="fragment">fit models</li>
+</ul>
+</div>
+</section>
+<section id="goals-of-scientific-software-development" class="slide level2">
+<h2>Goals of scientific software development</h2>
+<ul>
+<li>lower barriers to good research</li>
+<li>be usable and accessible</li>
+<li>produce reproducible and reliable results</li>
+</ul>
+<div class="fragment">
+<p>and so software development should</p>
+<ul>
+<li>give a voice to stakeholders</li>
+<li>emphasize usability and documentation</li>
+<li>produce tested, reproducible, and interoperable results</li>
+<li>be visualizable and debuggable</li>
+</ul>
+</div>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+<p>In science we stand on each others’ shoulders</p>
+<div class="fragment">
+<div class="floatright">
+<p>and so we should be mindful about<br />
+<em>how</em> and <em>where</em> we stand.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section id="what-can-we-simulate-today" class="title-slide slide level1">
+<h1>What can we simulate, today?</h1>
+
+</section>
+<section id="wish-list" class="slide level2">
+<h2>Wish list:</h2>
+<div class="smallish">
+<div class="columns">
+<div class="column">
+<p>Whole genomes, thousands of samples,<br />
+from millions of individuals.</p>
+<p><strong>Demography:</strong></p>
+<ul>
+<li>life history</li>
+<li>separate sexes</li>
+<li>selfing</li>
+<li>polyploidy</li>
+<li>species interactions</li>
+</ul>
+<p><strong>Geography:</strong></p>
+<ul>
+<li>discrete populations</li>
+<li>continuous landscapes</li>
+<li>barriers</li>
+</ul>
+<p><strong>History:</strong></p>
+<ul>
+<li>ancient samples</li>
+<li>range shifts</li>
+</ul>
+</div><div class="column">
+<p><strong>Natural selection:</strong></p>
+<ul>
+<li>selective sweeps</li>
+<li>introgressing alleles</li>
+<li>background selection</li>
+<li>quantitative traits</li>
+<li>incompatibilities</li>
+<li>local adaptation</li>
+</ul>
+<p><strong>Genomes:</strong></p>
+<ul>
+<li>recombination rate variation</li>
+<li>gene conversion</li>
+<li>infinite-sites mutation</li>
+<li>nucleotide models</li>
+<li>context-dependence</li>
+<li>mobile elements</li>
+<li>inversions</li>
+<li>copy number variation</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="msprime" class="slide level2">
+<h2>msprime</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>a coalescent simulator, so</li>
+<li>discrete populations</li>
+<li>neutral* evolution</li>
+<li>fast</li>
+</ul>
+<p><em>coming soon:</em></p>
+<ul>
+<li>selective sweeps (as in discoal)</li>
+<li>non-constant finite-sites mutation and recombination</li>
+<li>gene conversion</li>
+<li>multiple merger coalescents</li>
+<li>discrete time Wright-Fisher</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/msprime-ts.png" alt="ts = msprime.simulate(500, Ne=1e4, length=2e3, recombination_rate=1e-8, random_seed=1913378874)" /><figcaption aria-hidden="true">ts = msprime.simulate(500, Ne=1e4, length=2e3, recombination_rate=1e-8, random_seed=1913378874)</figcaption>
+</figure>
+<div class="caption">
+<p>see <a href="https://github.com/tskit-dev/msprime">github.com/tskit-dev/msprime</a> and <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842">Kelleher, Etheridge, and McVean</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="slim" class="slide level2">
+<h2>SLiM</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>by Ben Haller and Philipp Messer</p>
+<ul>
+<li>a forwards simulator</li>
+<li>arbitary life cycles</li>
+<li>continuous geography and local interactions</li>
+<li>distributions of fitness coefficients</li>
+<li>quantitative traits take more work</li>
+<li>anything is possible</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/slim-gui.png" alt="SLiM GUI" /><figcaption aria-hidden="true">SLiM GUI</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="msprime-slim-are-interoperable" class="slide level2">
+<h2>msprime + SLiM are interoperable!</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>You can:</p>
+<ul>
+<li><p>use msprime to add mutations to the genealogies of a SLiM simulation</p></li>
+<li><p>use msprime to <em>recapitate</em> uncoalesced lineages in a SLiM simulation</p></li>
+<li><p>use SLiM to simulate selection on neutral diversity generated by msprime</p></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/pedigree_recapitate.png" style="width:50.0%" alt="recapitation" /><figcaption aria-hidden="true">recapitation</figcaption>
+</figure>
+<div class="caption">
+<p>from <a href="https://pyslim.readthedocs.io/en/latest/tutorial.html#recapitation">pyslim.readthedocs.io/en/latest/tutorial.html</a></p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="tree-sequences" class="title-slide slide level1">
+<h1>Tree sequences</h1>
+
+</section>
+<section id="history-is-a-sequence-of-trees" class="slide level2">
+<h2>History is a sequence of trees</h2>
+<p>For a set of sampled chromosomes, at each position along the genome there is a genealogical tree that says how they are related.</p>
+<div class="fragment">
+<figure>
+<img data-src="figs/ts_ex/sim_ts.anim.gif" style="width:100.0%" alt="Trees along a chromosome" /><figcaption aria-hidden="true">Trees along a chromosome</figcaption>
+</figure>
+</div>
+</section>
+<section class="slide level2">
+
+<p>The <strong>succinct tree sequence</strong></p>
+<div class="floatright">
+<p>is a way to succinctly describe this, er, sequence of trees</p>
+<p><em>and</em> the resulting genome sequences.</p>
+</div>
+<div class="fragment">
+<div class="floatright">
+<figure>
+<img data-src="figs/tskit_logo.png" style="width:40.0%" alt="example tree sequence" /><figcaption aria-hidden="true">example tree sequence</figcaption>
+</figure>
+<div class="caption">
+<p>introduced by <strong>Jerome Kelleher</strong>, in <a href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004842">Kelleher, Etheridge, and McVean</a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="file-sizes" class="slide level2">
+<h2>File sizes</h2>
+<div class="centered">
+<figure>
+<img data-src="figs/tsinfer_sizes.png" style="width:90.0%" alt="file sizes" /><figcaption aria-hidden="true">file sizes</figcaption>
+</figure>
+</div>
+<div class="caption">
+<p>100Mb chromosomes; from <a href="https://www.nature.com/articles/s41588-019-0483-y">Kelleher et al 2018, <em>Inferring whole-genome histories in large population datasets</em></a>, Nature Genetics</p>
+</div>
+<!-- Estimated sizes of files required to store the genetic variation data for a
+simulated human-like chromosome (100 megabases) for up to 10 billion haploid
+(5 billion diploid) samples. Simulations were run for 10 1 up to 10 7 haplotypes
+using msprime [Kelleher et al., 2016], and the sizes of the resulting files plotted
+(points). -->
+</section>
+<section id="fast-genotype-statistics" class="slide level2">
+<h2>Fast genotype statistics</h2>
+<div class="centered">
+<figure>
+<img data-src="figs/treestats/benchmarks_without_copy_longer_genome.png" style="width:70.0%" alt="efficiency of treestat computation" /><figcaption aria-hidden="true">efficiency of treestat computation</figcaption>
+</figure>
+</div>
+<div class="caption">
+<p>from <a href="https://www.biorxiv.org/content/10.1101/779132v1?rss=1">R., Thornton and Kelleher 2019, <em>Efficiently summarizing relationships in large samples</em></a>, Genetics</p>
+</div>
+</section>
+<section class="slide level2">
+
+<figure>
+<img data-src="figs/relate_chr20_site_div_branch.1000000.diversity.png" style="width:70.0%" alt="Figure 7 from “Efficiently summarizing relationships in large samples”" /><figcaption aria-hidden="true">Figure 7 from “Efficiently summarizing relationships in large samples”</figcaption>
+</figure>
+<div class="caption">
+<p>from <a href="https://www.biorxiv.org/content/10.1101/779132v1?rss=1">R., Thornton and Kelleher 2019, <em>Efficiently summarizing relationships in large samples</em></a>, Genetics</p>
+</div>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+<p><img data-src="figs/valley_line_flux.png" /></p>
+<div class="caption">
+<p>from <a href="https://www.annualreviews.org/doi/10.1146/annurev-ecolsys-110316-022659">Bradburd &amp; R., “Spatial population genetics: it’s about time”</a></p>
+</div>
+</section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<p><img data-src="figs/valley_cousins.png" /></p>
+<div class="caption">
+<p>from <a href="https://www.annualreviews.org/doi/10.1146/annurev-ecolsys-110316-022659">Bradburd &amp; R., “Spatial population genetics: it’s about time”</a></p>
+</div>
+</section>
+<section id="section-3" class="slide level2">
+<h2></h2>
+<p>If you could record <em>everything, ever</em></p>
+<div class="centered">
+<p>about your study organism,</p>
+</div>
+<div class="floatright">
+<p>what would you want to measure?</p>
+</div>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<div class="smallish">
+<div class="columns">
+<div class="column">
+<ul>
+<li><s>Whole genomes,</s>*</li>
+<li><s>thousands of samples, </s></li>
+<li><s>from millions of individuals.</s>*</li>
+</ul>
+<p><strong>Demography:</strong></p>
+<ul>
+<li><s>life history</s></li>
+<li><s>separate sexes</s>*</li>
+<li><s>selfing</s></li>
+<li>polyploidy*</li>
+<li>species interactions*</li>
+</ul>
+<p><strong>Geography:</strong></p>
+<ul>
+<li><s>discrete populations</s></li>
+<li><s>continuous landscapes</s></li>
+<li><s>barriers</s>*</li>
+</ul>
+<p><strong>History:</strong></p>
+<ul>
+<li><s>ancient samples</s></li>
+<li><s>range shifts</s></li>
+</ul>
+</div><div class="column">
+<p><strong>Natural selection:</strong></p>
+<ul>
+<li><s>selective sweeps</s></li>
+<li><s>introgressing alleles</s></li>
+<li><s>background selection</s></li>
+<li><s>quantitative traits</s>*</li>
+<li><s>incompatibilities</s>*</li>
+<li><s>local adaptation</s>*</li>
+</ul>
+<p><strong>Genomes:</strong></p>
+<ul>
+<li><s>recombination rate variation</s></li>
+<li><s>gene conversion</s></li>
+<li><s>infinite-sites mutation</s></li>
+<li><s>nucleotide models</s></li>
+<li><s>context-dependence</s>*</li>
+<li>mobile elements*</li>
+<li>inversions*</li>
+<li>copy number variation</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="ok-thats-a-lot" class="title-slide slide level1">
+<h1>ok that’s a lot</h1>
+
+</section>
+<section id="section-5" class="slide level2">
+<h2></h2>
+<p>Do you have to be an expert in <strong>all these things</strong>?!?</p>
+<div class="fragment">
+<p>Recombination maps, demographic models, gene conversion, mutation rates… and <em>tree sequences</em>?!?</p>
+</div>
+<div class="fragment">
+<p><em>I’ve spent a year developing my inference method, I can’t spend another year testing it against all possible problems!</em></p>
+</div>
+<div class="fragment">
+<p><em>I just want some realistic genomes to run my power analysis with!</em></p>
+</div>
+</section>
+<section id="enter-the-popsim-consortium" class="slide level2">
+<h2>enter the PopSim Consortium</h2>
+<blockquote>
+<p>stdpopsim: A community-maintained library of standard population genetic simulation models.</p>
+</blockquote>
+<div class="fragment">
+<p>The idea:</p>
+<pre><code>species + demographic model + contig + recombination map 
+   [ + selection ... ]</code></pre>
+</div>
+</section>
+<section id="section-6" class="slide level2">
+<h2></h2>
+<figure>
+<img data-src="figs/stdpopsim-dromel.png" alt="https://stdpopsim.readthedocs.io/en/latest/catalog.html#sec_catalog_DroMel_genome" /><figcaption aria-hidden="true">https://stdpopsim.readthedocs.io/en/latest/catalog.html#sec_catalog_DroMel_genome</figcaption>
+</figure>
+</section>
+<section id="section-7" class="slide level2">
+<h2></h2>
+<figure>
+<img data-src="figs/stdpopsim-homsap.png" alt="https://stdpopsim.readthedocs.io/en/latest/catalog.html#sec_catalog_HomSap_models" /><figcaption aria-hidden="true">https://stdpopsim.readthedocs.io/en/latest/catalog.html#sec_catalog_HomSap_models</figcaption>
+</figure>
+</section>
+<section id="section-8" class="slide level2">
+<h2></h2>
+<p>Simulate 100 samples from two populations of <em>A. thaliana</em>:</p>
+<pre><code>import stdpopsim
+species = stdpopsim.get_species(&quot;AraTha&quot;)
+contig = species.get_contig(&quot;chr4&quot;, genetic_map=&quot;SalomeAveraged_TAIR7&quot;)
+model = stdpopsim.IsolationWithMigration(NA=5000, N1=4000, N2=1000, T=1000, M12=0, M21=0)
+samples = model.get_samples(50, 50)
+engine = stdpopsim.get_engine(&quot;msprime&quot;)
+ts = engine.simulate(model, contig, samples, seed=13)</code></pre>
+</section>
+<section class="slide level2">
+
+<p>Compute and plot the joint SFS:</p>
+<pre><code>pop_samples = [ts.samples(0), ts.samples(1)]
+sfs = ts.allele_frequency_spectrum(sample_sets=[pop_samples],
+                                    polarised=True, span_normalise=False)
+import allel
+allel.plot_joint_sfs(sfs);</code></pre>
+<div class="centered">
+<p><img data-src="figs/aratha-sfs.png" style="width:50.0%" /></p>
+</div>
+</section></section>
+<section>
+<section id="who-is-doing-all-this-work-and-how" class="title-slide slide level1">
+<h1>Who is doing all this work? and how?</h1>
+
+</section>
+<section id="it-takes-a-community" class="slide level2">
+<h2>It takes a community</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>SLiM:<br />
+Ben Haller, Philipp Messer, and <img data-src="figs/slim-acknowledgements.png" alt="SLiM Acknowledgements" /></p>
+<div class="centered">
+<p><img data-src="figs/ben-haller.jpg" style="width:25.0%" alt="ben haller" /> <img data-src="figs/jerome.jpeg" style="width:30.0%" alt="jerome kelleher" /> <img data-src="figs/ben-jeffery.jpg" style="width:30.0%" alt="ben jeffery" /></p>
+</div>
+</div><div class="column" style="width:50%;">
+<p><code>msprime/tskit</code>:</p>
+<div class="smaller">
+<p>Jaime Ashander, Franz Baumdicker, Gertjan Bisschop, Bjarki Eldon, E. Castedo Ellerman, Jared Galloway, Ariella Gladstein, Daniel Goldstein, Graham Gower, Simon Gravel, Bing Guo, Ben Jeffery, Jerome Kelleher, Andrew Kern, Jere Koskela, Warren W. Kretzschmar, Ivan Krukov, Konrad Lohse, Michael Matschiner, Dominic Nelson, Nathaniel Pope, Aaron Ragsdale, Peter Ralph, Murillo Rodrigues, Kumar Saunack, Thibaut Sellinger, Kevin Thornton, Georgia Tsambos, Hugo Van Kemenade, Yan Wong, Sha Zhu</p>
+</div>
+<p><code>stdpopsim</code>:</p>
+<div class="smaller">
+<p>Jeffrey R Adrion, Christopher B Cole, Noah Dukler, Jared G Galloway, Ariella L Gladstein, Graham Gower, Christopher C Kyriazis, Aaron P Ragsdale, Georgia Tsambos, Franz Baumdicker, Jedidiah Carlson, Reed A Cartwright, Arun Durvasula, Ilan Gronau, Bernard Y Kim, Patrick McKenzie, Philipp W Messer, Ekaterina Noskova, Diego Ortega-Del Vecchyo, Fernando Racimo, Travis J Struck, Simon Gravel, Ryan N Gutenkunst, Kirk E Lohmueller, Peter L Ralph, Daniel R Schrider, Adam Siepel, Jerome Kelleher, Andrew D Kern</p>
+</div>
+</div>
+</div>
+</section>
+<section id="goals-1" class="slide level2">
+<h2>Goals</h2>
+<ul>
+<li><p>respectful and inclusive</p></li>
+<li><p>reproducible and reliable</p></li>
+<li><p>well-documented and accessible</p></li>
+<li><p>relevant and impactful</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div class="centered">
+<p><strong>What</strong> we do is <em>almost</em> as important as <strong>how</strong> we do it.</p>
+</div>
+</section>
+<section id="communication-lots-of-github" class="slide level2">
+<h2>Communication: lots of github</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/msprime-issues.png" alt="https://github.com/tskit-dev/msprime/issues" /><figcaption aria-hidden="true">https://github.com/tskit-dev/msprime/issues</figcaption>
+</figure>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figs/tskit-code-comment.png" /></p>
+</div>
+</div>
+</section>
+<section id="section-9" class="slide level2">
+<h2></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>General protocol:</p>
+<ol type="1">
+<li>Propose a feature or point out a bug.</li>
+<li>Discuss solutions and the interface.</li>
+<li>Write a draft solution.</li>
+<li>Test it.</li>
+<li>Finalize and merge.</li>
+</ol>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/msprime-discrete-issue.png" alt="https://github.com/tskit-dev/msprime/issues/880" /><figcaption aria-hidden="true">https://github.com/tskit-dev/msprime/issues/880</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="reproducible-and-reliable" class="slide level2">
+<h2>Reproducible and reliable</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Testing</strong></p>
+<ul>
+<li>ensures reliability</li>
+<li>makes development <em>easier</em></li>
+</ul>
+<p>General strategy:</p>
+<p><em>compute the same thing in two different ways, and compare.</em></p>
+</div><div class="column" style="width:50%;">
+<div class="smaller">
+<pre><code>============================= test session starts ==============================
+collecting ... collected 2587 items
+
+tests/test_cli.py::TestTskitArgumentParser::test_individuals_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_individuals_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_individuals_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_nodes_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_nodes_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_nodes_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_edges_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_edges_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_edges_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_sites_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_sites_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_sites_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_mutations_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_mutations_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_mutations_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_provenances_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_provenances_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_provenances_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_fasta_default_values SKIPPED
+tests/test_cli.py::TestTskitArgumentParser::test_fasta_short_args SKIPPED
+tests/test_cli.py::TestTskitArgumentParser::test_fasta_long_args SKIPPED
+tests/test_cli.py::TestTskitArgumentParser::test_vcf_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_vcf_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_vcf_long_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_upgrade_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_info_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_populations_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_trees_default_values PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_trees_short_args PASSED
+tests/test_cli.py::TestTskitArgumentParser::test_trees_long_args PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_edges PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_fasta SKIPPED
+tests/test_cli.py::TestTskitConversionOutput::test_individuals PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_info PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_mutations PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_nodes PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_provenances PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_provenances_human PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_sites PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_trees_draw PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_trees_no_draw PASSED
+tests/test_cli.py::TestTskitConversionOutput::test_vcf PASSED
+tests/test_cli.py::TestBadFile::test_info PASSED
+tests/test_cli.py::TestBadFile::test_fasta PASSED
+tests/test_cli.py::TestBadFile::test_vcf PASSED
+tests/test_cli.py::TestBadFile::test_nodes PASSED
+tests/test_cli.py::TestBadFile::test_edges PASSED
+tests/test_cli.py::TestBadFile::test_sites PASSED
+tests/test_cli.py::TestBadFile::test_mutations PASSED
+tests/test_cli.py::TestBadFile::test_provenances PASSED
+tests/test_cli.py::TestUpgrade::test_conversion PASSED
+tests/test_cli.py::TestUpgrade::test_duplicate_positions PASSED
+tests/test_cli.py::TestUpgrade::test_duplicate_positions_error PASSED
+tests/test_combinatorics.py::TestCombination::test_combination_with_replacement_rank_unrank PASSED
+tests/test_combinatorics.py::TestCombination::test_combination_rank_unrank PASSED
+tests/test_combinatorics.py::TestCombination::test_combination_unrank_errors PASSED
+tests/test_combinatorics.py::TestPartition::test_rule_asc PASSED
+tests/test_combinatorics.py::TestPartition::test_partitions PASSED
+tests/test_combinatorics.py::TestPartition::test_group_partition PASSED
+tests/test_combinatorics.py::TestRankTree::test_num_shapes PASSED
+tests/test_combinatorics.py::TestRankTree::test_num_labellings PASSED
+tests/test_combinatorics.py::TestRankTree::test_num_labelled_trees PASSED
+tests/test_combinatorics.py::TestRankTree::test_all_labelled_trees_3 PASSED
+tests/test_combinatorics.py::TestRankTree::test_all_labelled_trees_4 PASSED
+tests/test_combinatorics.py::TestRankTree::test_generate_trees_roundtrip PASSED
+tests/test_combinatorics.py::TestRankTree::test_generate_treeseq_roundtrip PASSED
+tests/test_combinatorics.py::TestRankTree::test_all_shapes_roundtrip PASSED
+tests/test_combinatorics.py::TestRankTree::test_all_labellings_roundtrip PASSED
+tests/test_combinatorics.py::TestRankTree::test_unrank PASSED
+tests/test_combinatorics.py::TestRankTree::test_unrank_errors PASSED
+tests/test_combinatorics.py::TestRankTree::test_shape_rank PASSED
+tests/test_combinatorics.py::TestRankTree::test_shape_unrank PASSED
+tests/test_combinatorics.py::TestRankTree::test_label_rank PASSED
+tests/test_combinatorics.py::TestRankTree::test_label_unrank PASSED
+tests/test_combinatorics.py::TestRankTree::test_unrank_rank_round_trip PASSED
+tests/test_combinatorics.py::TestRankTree::test_is_canonical PASSED
+tests/test_combinatorics.py::TestRankTree::test_unranking_is_canonical PASSED
+tests/test_combinatorics.py::TestRankTree::test_to_from_tsk_tree PASSED
+tests/test_combinatorics.py::TestRankTree::test_from_unary_tree PASSED
+tests/test_combinatorics.py::TestRankTree::test_to_tsk_tree_errors PASSED
+tests/test_combinatorics.py::TestRankTree::test_rank_errors_multiple_roots PASSED
+tests/test_combinatorics.py::TestRankTree::test_span PASSED
+tests/test_combinatorics.py::TestRankTree::test_big_trees PASSED
+tests/test_combinatorics.py::TestRankTree::test_symmetrical_trees PASSED
+tests/test_combinatorics.py::TestRankTree::test_equal PASSED
+tests/test_combinatorics.py::TestRankTree::test_is_symmetrical PASSED
+tests/test_combinatorics.py::TestPartialTopologyCounter::test_add_sibling_topologies_simple PASSED
+tests/test_combinatorics.py::TestPartialTopologyCounter::test_add_sibling_topologies_polytomy PASSED
+tests/test_combinatorics.py::TestPartialTopologyCounter::test_join_topologies PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_single_population PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_three_populations PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_multiple_roots PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_no_sample_subtrees PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_no_full_topology PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_polytomies PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_custom_key PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_ignores_non_sample_leaves PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_internal_samples_errors PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_non_sample_nodes_errors PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_standard_msprime_migrations PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_msprime_dtwf PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_forward_time_wright_fisher_unsimplified_all_sample_sets PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_forward_time_wright_fisher_unsimplified PASSED
+tests/test_combinatorics.py::TestCountTopologies::test_forward_time_wright_fisher_simplified PASSED
+tests/test_dict_encoding.py::TestEncodingVersion::test_version PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_simple PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_empty PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_individuals PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_sequence_length PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_migration PASSED
+tests/test_dict_encoding.py::TestRoundTrip::test_example PASSED
+tests/test_dict_encoding.py::TestMissingData::test_missing_sequence_length PASSED
+tests/test_dict_encoding.py::TestMissingData::test_missing_metadata PASSED
+tests/test_dict_encoding.py::TestMissingData::test_missing_metadata_schema PASSED
+tests/test_dict_encoding.py::TestMissingData::test_missing_tables PASSED
+tests/test_dict_encoding.py::TestBadTypes::test_2d_array PASSED
+tests/test_dict_encoding.py::TestBadTypes::test_str PASSED
+tests/test_dict_encoding.py::TestBadTypes::test_bad_top_level_types PASSED
+tests/test_dict_encoding.py::TestBadLengths::test_two_rows PASSED
+tests/test_dict_encoding.py::TestBadLengths::test_zero_rows PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_individuals PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_nodes PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_edges PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_migrations PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_sites PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_mutations PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_populations PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_provenances PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_top_level_metadata PASSED
+tests/test_dict_encoding.py::TestRequiredAndOptionalColumns::test_top_level_metadata_schema PASSED
+tests/test_dict_encoding.py::test_pickled_examples PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_2_binary PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_5_binary PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_10_binary PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_20_binary PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_nonbinary PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_zero_edge PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_zero_roots PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_multiroot PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_left_child PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_null_node_left_child PASSED
+tests/test_drawing.py::TestClosestLeftNode::test_leaf_node_left_child PASSED
+tests/test_drawing.py::TestOrder::test_bad_order PASSED
+tests/test_drawing.py::TestOrder::test_default_order PASSED
+tests/test_drawing.py::TestOrder::test_order_mapping PASSED
+tests/test_drawing.py::TestOrder::test_tree_svg_variants PASSED
+tests/test_drawing.py::TestOrder::test_tree_text_variants PASSED
+tests/test_drawing.py::TestOrder::test_tree_sequence_text_variants PASSED
+tests/test_drawing.py::TestOrder::test_tree_sequence_svg_variants PASSED
+tests/test_drawing.py::TestFormats::test_svg_variants PASSED
+tests/test_drawing.py::TestFormats::test_default PASSED
+tests/test_drawing.py::TestFormats::test_ascii_variants PASSED
+tests/test_drawing.py::TestFormats::test_unicode_variants PASSED
+tests/test_drawing.py::TestFormats::test_bad_formats PASSED
+tests/test_drawing.py::TestDrawText::test_draw_defaults PASSED
+tests/test_drawing.py::TestDrawText::test_draw_nonbinary PASSED
+tests/test_drawing.py::TestDrawText::test_draw_multiroot PASSED
+tests/test_drawing.py::TestDrawText::test_draw_mutations_over_roots PASSED
+tests/test_drawing.py::TestDrawText::test_draw_unary PASSED
+tests/test_drawing.py::TestDrawText::test_draw_empty_tree PASSED
+tests/test_drawing.py::TestDrawText::test_draw_zero_roots_tree PASSED
+tests/test_drawing.py::TestDrawText::test_draw_zero_edge_tree PASSED
+tests/test_drawing.py::TestDrawText::test_even_num_children_tree PASSED
+tests/test_drawing.py::TestDrawText::test_odd_num_children_tree PASSED
+tests/test_drawing.py::TestDrawText::test_node_labels PASSED
+tests/test_drawing.py::TestDrawText::test_long_internal_labels PASSED
+tests/test_drawing.py::TestDrawText::test_no_node_labels PASSED
+tests/test_drawing.py::TestDrawText::test_unused_args PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_defaults PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_nonbinary PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_multiroot PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_mutations_over_roots PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_unary PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_empty_tree PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_zero_roots_tree PASSED
+tests/test_drawing.py::TestDrawUnicode::test_draw_zero_edge_tree PASSED
+tests/test_drawing.py::TestDrawUnicode::test_even_num_children_tree PASSED
+tests/test_drawing.py::TestDrawUnicode::test_odd_num_children_tree PASSED
+tests/test_drawing.py::TestDrawUnicode::test_node_labels PASSED
+tests/test_drawing.py::TestDrawUnicode::test_long_internal_labels PASSED
+tests/test_drawing.py::TestDrawUnicode::test_no_node_labels PASSED
+tests/test_drawing.py::TestDrawUnicode::test_unused_args PASSED
+tests/test_drawing.py::TestDrawTextErrors::test_bad_orientation PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_simple_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_simple_tree_long_label PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_four_leaves PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_trident_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_pitchfork_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_stick_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_draw_forky_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_draw_multiroot_forky_tree PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_simple_tree_sequence PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_tree_sequence_non_minlex PASSED
+tests/test_drawing.py::TestDrawTextExamples::test_max_tree_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_all_edges_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_all_mutations_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_all_nodes_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_bad_max_tree_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_bad_tree_height_scale PASSED
+tests/test_drawing.py::TestDrawSvg::test_bad_x_scale PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_defaults PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_empty PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_even_height_ts PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_file PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_integer_breaks_ts FAILED
+tests/test_drawing.py::TestDrawSvg::test_draw_multiroot PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_mutations_over_roots PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_nonbinary PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_simple_ts PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_sized_tree PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_sized_ts PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_unary PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_zero_edge PASSED
+tests/test_drawing.py::TestDrawSvg::test_draw_zero_roots PASSED
+tests/test_drawing.py::TestDrawSvg::test_height_scale_rank_and_max_tree_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_height_scale_time_and_max_tree_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_known_svg_tree_no_mut PASSED
+tests/test_drawing.py::TestDrawSvg::test_known_svg_tree_root_mut PASSED
+tests/test_drawing.py::TestDrawSvg::test_known_svg_ts PASSED
+tests/test_drawing.py::TestDrawSvg::test_max_tree_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_mutation_labels PASSED
+tests/test_drawing.py::TestDrawSvg::test_no_edges PASSED
+tests/test_drawing.py::TestDrawSvg::test_no_mutation_labels PASSED
+tests/test_drawing.py::TestDrawSvg::test_no_node_labels PASSED
+tests/test_drawing.py::TestDrawSvg::test_node_labels PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_edge_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_mutation_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_mutation_label PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_mutation_label_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_node_colour PASSED
+tests/test_drawing.py::TestDrawSvg::test_one_node_label PASSED
+tests/test_drawing.py::TestDrawSvg::test_tree_height_scale PASSED
+tests/test_drawing.py::TestDrawSvg::test_tree_root_branch PASSED
+tests/test_drawing.py::TestDrawSvg::test_unplotted_edge PASSED
+tests/test_drawing.py::TestDrawSvg::test_unplotted_mutation PASSED
+tests/test_drawing.py::TestDrawSvg::test_unplotted_node PASSED
+tests/test_drawing.py::TestDrawSvg::test_width_height PASSED
+tests/test_drawing.py::TestDrawSvg::test_x_scale PASSED
+tests/test_drawing.py::TestRounding::test_rnd PASSED
+tests/test_fasta.py::TestLineLength::test_wrap_length_default_easy PASSED
+tests/test_fasta.py::TestLineLength::test_wrap_length_default_harder PASSED
+tests/test_fasta.py::TestLineLength::test_wrap_length_custom_easy PASSED
+tests/test_fasta.py::TestLineLength::test_wrap_length_custom_harder PASSED
+tests/test_fasta.py::TestLineLength::test_wrap_length_no_wrap PASSED
+tests/test_fasta.py::TestLineLength::test_bad_wrap PASSED
+tests/test_fasta.py::TestSequenceIds::test_default_ids PASSED
+tests/test_fasta.py::TestSequenceIds::test_custom_ids PASSED
+tests/test_fasta.py::TestSequenceIds::test_bad_length_ids PASSED
+tests/test_fasta.py::TestRoundTrip::test_equal_lines PASSED
+tests/test_fasta.py::TestRoundTrip::test_unequal_lines PASSED
+tests/test_fasta.py::TestRoundTrip::test_unwrapped PASSED
+tests/test_file_format.py::TestLoadLegacyExamples::test_format_too_old_raised_for_hdf5 PASSED
+tests/test_file_format.py::TestLoadLegacyExamples::test_msprime_v_0_3_0 PASSED
+tests/test_file_format.py::TestLoadLegacyExamples::test_msprime_v_0_4_0 PASSED
+tests/test_file_format.py::TestLoadLegacyExamples::test_msprime_v_0_5_0 PASSED
+tests/test_file_format.py::TestRoundTrip::test_bottleneck_example FAILED
+tests/test_file_format.py::TestRoundTrip::test_duplicate_mutation_positions PASSED
+tests/test_file_format.py::TestRoundTrip::test_duplicate_mutation_positions_single_value PASSED
+tests/test_file_format.py::TestRoundTrip::test_edge_metadata_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_empty_file PASSED
+tests/test_file_format.py::TestRoundTrip::test_general_mutation_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_malformed_json_v2 FAILED
+tests/test_file_format.py::TestRoundTrip::test_migration_example FAILED
+tests/test_file_format.py::TestRoundTrip::test_migration_metadata_example FAILED
+tests/test_file_format.py::TestRoundTrip::test_multi_locus_with_mutation FAILED
+tests/test_file_format.py::TestRoundTrip::test_multichar_mutation_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_mutation_metadata_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_no_provenance PASSED
+tests/test_file_format.py::TestRoundTrip::test_node_metadata_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_provenance_timestamp_only PASSED
+tests/test_file_format.py::TestRoundTrip::test_recurrent_mutation_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_single_locus_no_mutation PASSED
+tests/test_file_format.py::TestRoundTrip::test_single_locus_with_mutation FAILED
+tests/test_file_format.py::TestRoundTrip::test_site_metadata_example PASSED
+tests/test_file_format.py::TestRoundTrip::test_v2_no_samples FAILED
+tests/test_file_format.py::TestRoundTrip::test_zero_edges PASSED
+tests/test_file_format.py::TestErrors::test_no_version_number PASSED
+tests/test_file_format.py::TestErrors::test_unknown_legacy_version PASSED
+tests/test_file_format.py::TestErrors::test_unsupported_version PASSED
+tests/test_file_format.py::TestErrors::test_v2_non_binary_records PASSED
+tests/test_file_format.py::TestDumpFormat::test_bottleneck_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_edge_metadata_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_general_mutation_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_historical_sample_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_migration_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_migration_metadata_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_multi_locus_with_mutation PASSED
+tests/test_file_format.py::TestDumpFormat::test_multichar_mutation_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_mutation_metadata_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_node_metadata_example PASSED
+tests/test_file_format.py::TestDumpFormat::test_single_locus_no_mutation PASSED
+tests/test_file_format.py::TestDumpFormat::test_single_locus_with_mutation PASSED
+tests/test_file_format.py::TestDumpFormat::test_site_metadata_example PASSED
+tests/test_file_format.py::TestUuid::test_different_files_same_ts PASSED
+tests/test_file_format.py::TestOptionalColumns::test_empty_edge_metadata PASSED
+tests/test_file_format.py::TestOptionalColumns::test_empty_migration_metadata PASSED
+tests/test_file_format.py::TestOptionalColumns::test_empty_mutation_time FAILED
+tests/test_file_format.py::TestFileFormatErrors::test_equal_length_columns PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_format_name_error PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_index_columns PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_load_bad_formats PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_load_empty_kastore PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_load_non_tskit_hdf5 PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_missing_fields PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_new_version_load_error PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_offset_columns PASSED
+tests/test_file_format.py::TestFileFormatErrors::test_old_version_load_error PASSED
+tests/test_fileobj.py::TestPath::test_pathlib PASSED
+tests/test_fileobj.py::TestPathLib::test_pathlib PASSED
+tests/test_fileobj.py::TestFileObj::test_fileobj PASSED
+tests/test_fileobj.py::TestFileObj::test_fileobj_multi PASSED
+tests/test_fileobj.py::TestFileObjRW::test_fileobj PASSED
+tests/test_fileobj.py::TestFileObjRW::test_fileobj_multi PASSED
+tests/test_fileobj.py::TestFD::test_fd PASSED
+tests/test_fileobj.py::TestFD::test_fd_multi PASSED
+tests/test_fileobj.py::TestUnsupportedObjects::test_string_io PASSED
+tests/test_fileobj.py::TestFIFO::test_single_stream PASSED
+tests/test_fileobj.py::TestFIFO::test_multi_stream PASSED
+tests/test_fileobj.py::TestSocket::test_single_then_multi PASSED</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="section-10" class="slide level2">
+<h2></h2>
+<figure>
+<img data-src="figs/msprime-issue-1000.png" alt="https://github.com/tskit-dev/msprime/issues/1000" /><figcaption aria-hidden="true">https://github.com/tskit-dev/msprime/issues/1000</figcaption>
+</figure>
+</section>
+<section id="usable-and-accessible" class="slide level2">
+<h2>Usable and accessible</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Documentation:</p>
+<ul>
+<li><p>quickstart</p></li>
+<li><p>tutorials</p></li>
+<li><p>detailed interface reference</p></li>
+<li><p>user support</p></li>
+<li><p>workshops</p></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<figure>
+<img data-src="figs/slim-manual.png" alt="SLiM manual, 619 pages" /><figcaption aria-hidden="true">SLiM manual, 619 pages</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="section-11" class="slide level2">
+<h2></h2>
+<figure>
+<img data-src="figs/stdpopsim-docs.png" alt="stdpopsim documentation" /><figcaption aria-hidden="true">stdpopsim documentation</figcaption>
+</figure>
+</section>
+<section id="workshops" class="slide level2">
+<h2>Workshops</h2>
+<figure>
+<img data-src="figs/ariella-workshop.png" alt="Ariella Gladstein giving a workshop" /><figcaption aria-hidden="true">Ariella Gladstein giving a workshop</figcaption>
+</figure>
+</section>
+<section id="we-welcome-contributors" class="slide level2">
+<h2>We welcome contributors!</h2>
+<ul>
+<li><p>learn git/python</p></li>
+<li><p>become an expert simulator</p></li>
+<li><p>make tools that do what <em>you</em> need</p></li>
+</ul>
+</section></section>
+<section>
+<section id="thanks" class="title-slide slide level1">
+<h1>Thanks!</h1>
+
+</section>
+<section id="thanks-especially-to" class="slide level2">
+<h2>Thanks especially to</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Jerome Kelleher<br />
+Ben Haller<br />
+Andy Kern<br />
+Ariella Gladstein<br />
+Georgia Tsambos<br />
+Murillo Rodrigues<br />
+Graham Gower<br />
+Jeff Adrion<br />
+Yan Wong<br />
+Jared Galloway<br />
+Boyana Norris<br />
+Philipp Messer<br />
+Ben Jeffery<br />
+</p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="figs/nsf.jpeg" style="width:30.0%" alt="NSF" /> <img data-src="figs/nih.jpeg" style="width:30.0%" alt="NIH" /> <img data-src="figs/bdi.jpeg" style="width:50.0%" alt="BDI" /> <img data-src="figs/uo.png" style="width:50.0%" alt="UO" /></p>
+</div>
+</div>
+<!-- questions?? -->
+</section>
+<section id="section-12" class="slide level2" data-background-image="figs/guillemots_thanks.png" data-background-position="center" data-background-size="50%">
+<h2 data-background-image="figs/guillemots_thanks.png" data-background-position="center" data-background-size="50%"></h2>
+</section>
+<section id="section-13" class="slide level2">
+<h2></h2>
+<div class="smaller">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>pop0 <span class="op">=</span> msprime.PopulationConfiguration(sample_size<span class="op">=</span><span class="dv">3</span>, initial_size <span class="op">=</span> <span class="dv">500</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>pop1 <span class="op">=</span> msprime.PopulationConfiguration(sample_size<span class="op">=</span><span class="dv">3</span>, initial_size <span class="op">=</span> <span class="dv">500</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>M <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="fl">0.05</span>],</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>              [<span class="fl">0.02</span>, <span class="dv">0</span>]])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>admixture_event  <span class="op">=</span> msprime.MassMigration(time <span class="op">=</span> <span class="dv">50</span>, source <span class="op">=</span> <span class="dv">0</span>, dest <span class="op">=</span> <span class="dv">1</span>, proportion <span class="op">=</span> <span class="fl">0.3</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>divergence_event <span class="op">=</span> msprime.MassMigration(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>        time <span class="op">=</span> <span class="dv">200</span>, source <span class="op">=</span> <span class="dv">1</span>, dest <span class="op">=</span> <span class="dv">0</span>, proportion <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>rate_change <span class="op">=</span> msprime.MigrationRateChange(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>    time <span class="op">=</span> <span class="dv">200</span>, rate <span class="op">=</span> <span class="dv">0</span>, matrix_index<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>ddb <span class="op">=</span> msprime.DemographyDebugger(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>    population_configurations<span class="op">=</span>[pop0, pop1], migration_matrix <span class="op">=</span> M,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>    demographic_events<span class="op">=</span>[admixture_event, divergence_event, rate_change])</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>ddb.print_history()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="op">============================</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>Epoch: <span class="dv">0</span> <span class="op">--</span> <span class="fl">50.0</span> generations</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="op">============================</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a>     start     end      growth_rate <span class="op">|</span>     <span class="dv">0</span>        <span class="dv">1</span>    </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>   <span class="op">--------</span> <span class="op">--------</span>       <span class="op">--------</span> <span class="op">|</span> <span class="op">--------</span> <span class="op">--------</span> </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a><span class="dv">0</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>     <span class="dv">0</span>      <span class="fl">0.05</span>   </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a><span class="dv">1</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>   <span class="fl">0.02</span>       <span class="dv">0</span>    </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>Events <span class="op">@</span> generation <span class="fl">50.0</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a>   <span class="op">-</span> Mass migration: Lineages moved <span class="cf">with</span> probability <span class="fl">0.3</span> backwards <span class="kw">in</span> time <span class="cf">with</span> source <span class="dv">0</span> <span class="op">&amp;</span> dest <span class="dv">1</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a>                     (equivalent to migration <span class="im">from</span> <span class="dv">1</span> to <span class="dv">0</span> forwards <span class="kw">in</span> time)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a><span class="op">================================</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a>Epoch: <span class="fl">50.0</span> <span class="op">--</span> <span class="fl">200.0</span> generations</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="op">================================</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a>     start     end      growth_rate <span class="op">|</span>     <span class="dv">0</span>        <span class="dv">1</span>    </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a>   <span class="op">--------</span> <span class="op">--------</span>       <span class="op">--------</span> <span class="op">|</span> <span class="op">--------</span> <span class="op">--------</span> </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a><span class="dv">0</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>     <span class="dv">0</span>      <span class="fl">0.05</span>   </span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a><span class="dv">1</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>   <span class="fl">0.02</span>       <span class="dv">0</span>    </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>Events <span class="op">@</span> generation <span class="fl">200.0</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a>   <span class="op">-</span> Mass migration: Lineages moved <span class="cf">with</span> probability <span class="dv">1</span> backwards <span class="kw">in</span> time <span class="cf">with</span> source <span class="dv">1</span> <span class="op">&amp;</span> dest <span class="dv">0</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a>                     (equivalent to migration <span class="im">from</span> <span class="dv">0</span> to <span class="dv">1</span> forwards <span class="kw">in</span> time)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>   <span class="op">-</span> Migration rate change to <span class="dv">0</span> everywhere</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true"></a><span class="op">===============================</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true"></a>Epoch: <span class="fl">200.0</span> <span class="op">--</span> inf generations</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true"></a><span class="op">===============================</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true"></a>     start     end      growth_rate <span class="op">|</span>     <span class="dv">0</span>        <span class="dv">1</span>    </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true"></a>   <span class="op">--------</span> <span class="op">--------</span>       <span class="op">--------</span> <span class="op">|</span> <span class="op">--------</span> <span class="op">--------</span> </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true"></a><span class="dv">0</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>     <span class="dv">0</span>        <span class="dv">0</span>    </span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true"></a><span class="dv">1</span> <span class="op">|</span>   <span class="dv">500</span>      <span class="dv">500</span>                <span class="dv">0</span> <span class="op">|</span>     <span class="dv">0</span>        <span class="dv">0</span>    </span></code></pre></div>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
